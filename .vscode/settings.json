@@ -1,0 +1,6 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\franc\\OneDrive - favalefamily\\Mio\\CODE\\JAVA\\lib\\nano.jar"
+    ]
+}
