@@ -1,14 +1,23 @@
 import java.util.Random;
 
 public class blob {
-   
-    public enum status{
-        NORMAL,
-        TOUCHING,
-        TOUCHED
-    }
+    
+    public blob(int _i, int _partnerCount, boolean _type, int[] _radii) //init blob
+    {        
+        if (_type)
+        {
+            radius = _radii[0];
+        }
+        else {
+            radius = _radii[1];
+        }
 
-    int partnerCount;
+        blobStatus = status.NORMAL;
+
+        distance_array = new double[_partnerCount];
+
+    } 
+
     //position
     int posX;
     int posY;
@@ -21,23 +30,16 @@ public class blob {
     //blob masterID
     int masterID;
     //Status
-    status blobStatus = status.NORMAL;
-
- 
-
-    public blob(int _i, int _partnerCount, boolean _type) //init blob
-    {
-        partnerCount = _partnerCount;
-        if (_type)
-        {
-            radius = 30;
-        }
-        else {
-            radius = 12;
-        }
+    status blobStatus;
+    public enum status{
+        NORMAL,
+        TOUCHING,
+        TOUCHED
     }
-    
-    double[] distance_array = new double[partnerCount];
+
+    int touchingCounter = 0;
+
+    double[] distance_array;
 
     //get ranom positions
     public int[] randomPosition(int[] _canvas_res)
@@ -62,5 +64,11 @@ public class blob {
 
         return speed; //return
     }
-
 }
+
+/*
+public double _distance(int _pos1X, int  _pos1Y, int _pos2X, int _pos2Y)
+{
+    return Math.sqrt(((_pos1X-_pos2X)*(_pos1X-_pos2X))+((_pos1Y - _pos2Y)*(_pos1Y-_pos2Y)));
+}
+*/

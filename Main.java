@@ -1,11 +1,18 @@
     import nano.*;  
     import java.awt.Color;
+    import java.lang.Math;
     
-    public class Main {
+public class Main {
+
+    public static double distance(int _pos1X, int  _pos1Y, int _pos2X, int _pos2Y)
+    {
+        return Math.sqrt(((_pos1X-_pos2X)*(_pos1X-_pos2X))+((_pos1Y - _pos2Y)*(_pos1Y-_pos2Y)));
+    }
+
     public static void main(String[] args) {
         //Program starts here
         System.out.println("Blob simulation started");
-        
+
         //Initialize simuation enviornment
 
         //Import setup from setup.json
@@ -13,10 +20,11 @@
         final int ySize = 720;
         final int[] canvas_res = {xSize, ySize};
         final int[] max_a = {3, 3};
-        final int thickCount = 20;
-        final int thinCount = 20;
+        final int thickCount = 30;
+        final int thinCount = 30;
         final int thicR = 10;
         final int thinR = 5;
+        final int[] radii = {thicR, thinR};
 
 
         //Start window
@@ -35,7 +43,7 @@
         //thick
         for (int i = 0; i < thickCount; i++)
         {
-            blob blob = new blob(i, thinCount, true); //new blob
+            blob blob = new blob(i, thinCount, true, radii); //new blob
             blob.masterID = i+1; //assign id
             blob.radius = thicR; //determine radius
             thickBlob_array[i] = blob; //put in thickarray
@@ -52,7 +60,7 @@
         //thin
         for (int i = 0; i < thinCount; i++)
         {
-            blob blob = new blob(i, thickCount, true); //new blob
+            blob blob = new blob(i, thinCount, false, radii); //new blob
             blob.masterID = -i-1; //assign id
             blob.radius = thinR; //determine radius
             thinBlob_array[i] = blob; //put in thinarray
@@ -146,9 +154,21 @@
                 }
             }
 
+            //Find distaces between different types of blobs
+            for (int j = 0; j < thickBlob_array.length; j++)
+            {
+                for (int k = 0; k < thinBlob_array.length; k++)
+                {
+                    //get distance
+                    double d = distance(thickBlob_array[j].posX, thickBlob_array[j].posY, thinBlob_array[k].posX, thinBlob_array[k].posY);
+                    
+                    thickBlob_array[j].distance_array[k] = d;
+                    thinBlob_array[k].distance_array[j] = d;
 
-            //Iteration counter
-            System.out.printf("Iteration %s%n", i);
+                }
+            }
+
+            //If Touching
 
             //Draw simulation
             for (int j = 0; j < thickCount; j++)
@@ -164,10 +184,14 @@
             simulation_canvas.update();
 
             try {
-                Thread.sleep(10);
+                Thread.sleep(15);
             } catch (Exception InterrupException) {
             }
+
+            //Iteration counter
+            System.out.printf("Iteration %s%n", i);
+
         }
     }
-  }
+}
   
