@@ -13,8 +13,8 @@
         final int ySize = 720;
         final int[] canvas_res = {xSize, ySize};
         final int[] max_a = {3, 3};
-        final int thickCount = 10;
-        final int thinCount = 10;
+        final int thickCount = 20;
+        final int thinCount = 20;
         final int thicR = 10;
         final int thinR = 5;
 
@@ -28,7 +28,7 @@
         //Initialize all the blobs
         //2 different arrays for diffent types of blobs; 1 large major array.
         blob[] thickBlob_array = new blob[thickCount];
-        blob[] thinBlob_array = new blob[thickCount];
+        blob[] thinBlob_array = new blob[thinCount];
         blob[] generalBlob_array = new blob[(thickCount+thinCount)];
 
         //generate the blob arrays and polulate them respectivley
@@ -95,13 +95,55 @@
             for (int j = 0; j < (thickBlob_array.length); j++)
             {
                 thickBlob_array[j].posX = thickBlob_array[j].posX + thickBlob_array[j].dX;
+                
+                //chech for out of bounds
+                if (thickBlob_array[j].posX < 0)
+                {
+                    thickBlob_array[j].posX = canvas_res[0] + thickBlob_array[j].posX;
+                } 
+                else if (thickBlob_array[j].posX > canvas_res[0])
+                {
+                    thickBlob_array[j].posX = thickBlob_array[j].posX - canvas_res[0];
+                }
+                
                 thickBlob_array[j].posY = thickBlob_array[j].posY + thickBlob_array[j].dY;
+                
+                //chech for out of bounds
+                if (thickBlob_array[j].posY < 0)
+                {
+                    thickBlob_array[j].posY = canvas_res[1] + thickBlob_array[j].posY;
+                } 
+                else if (thickBlob_array[j].posY > canvas_res[1])
+                {
+                    thickBlob_array[j].posY = thickBlob_array[j].posY - canvas_res[1];
+                }
             }
             //thin
             for (int j = 0; j < (thinBlob_array.length); j++)
             {
                 thinBlob_array[j].posX = thinBlob_array[j].posX + thinBlob_array[j].dX;
+                
+                //chech for out of bounds
+                if (thinBlob_array[j].posX < 0)
+                {
+                    thinBlob_array[j].posX = canvas_res[0] + thinBlob_array[j].posX;
+                } 
+                else if (thinBlob_array[j].posX > canvas_res[0])
+                {
+                    thinBlob_array[j].posX = thinBlob_array[j].posX - canvas_res[0];
+                }
+                
                 thinBlob_array[j].posY = thinBlob_array[j].posY + thinBlob_array[j].dY;
+
+                //chech for out of bounds
+                if (thinBlob_array[j].posY < 0)
+                {
+                    thinBlob_array[j].posY = canvas_res[1] + thinBlob_array[j].posY;
+                } 
+                else if (thinBlob_array[j].posY > canvas_res[1])
+                {
+                    thinBlob_array[j].posY = thinBlob_array[j].posY - canvas_res[1];
+                }
             }
 
 
