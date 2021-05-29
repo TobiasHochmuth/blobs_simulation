@@ -169,7 +169,13 @@ public class Main {
             }
             //#endregion
 
-            //Update positions
+            if(enable_chance)
+            {
+                
+            }
+            else
+            {
+                //#regionUpdate positions if probability is disabled
             //thick
             for (int j = 0; j < (thickBlob_array.length); j++)
             {
@@ -211,7 +217,7 @@ public class Main {
                     thickBlob_array[j].blobStatus = blob.status.NORMAL;
                     }
                 } 
-                else
+                else //decrement touching counter or release blobs
                 {
                     if(thickBlob_array[j].touchingCounter != 0)
                     {
@@ -263,7 +269,7 @@ public class Main {
                         thinBlob_array[j].blobStatus = blob.status.NORMAL;
                     }
                 }
-                else
+                else //decrement touching counter or release blobs
                 {
                     if(thinBlob_array[j].touchingCounter != 0)
                     {
@@ -275,6 +281,10 @@ public class Main {
                     }
                 }
             }
+            //#endregion
+            }
+
+
 
             //#region Calculate collisions
             for (int j = 0; j < thickBlob_array.length; j++) //for every thick blob
@@ -311,6 +321,7 @@ public class Main {
                     }
                 }
             }
+            
 
             //Draw simulation
             for (int j = 0; j < thickBlob_array.length; j++) //Draw thick blobs
