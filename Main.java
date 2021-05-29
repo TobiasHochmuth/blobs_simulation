@@ -19,7 +19,8 @@ public class Main {
         final int xSize = 720;
         final int ySize = 720;
         final int[] canvas_res = {xSize, ySize};
-        final int[] max_a = {3, 3};
+        final int[] max_a_thick = {3, 3};
+        final int[] max_a_thin = {3, 3};
         final int thickCount = 35;
         final int thinCount = 35;
         final int thicR = 10;
@@ -61,8 +62,8 @@ public class Main {
             blob.posX = blob.randomPosition(canvas_res)[0];
             blob.posY = blob.randomPosition(canvas_res)[1];
             //assign random starting speeds to every blob
-            blob.dX = blob.randomSpeed(max_a)[0];
-            blob.dY = blob.randomSpeed(max_a)[1];
+            blob.dX = blob.randomSpeed(max_a_thick)[0];
+            blob.dY = blob.randomSpeed(max_a_thick)[1];
 
             generalBlob_array[i] = blob; //put in general array
         }
@@ -79,8 +80,8 @@ public class Main {
             blob.posX = blob.randomPosition(canvas_res)[0];
             blob.posY = blob.randomPosition(canvas_res)[1];
             //assign random starting speeds to every blob
-            blob.dX = blob.randomSpeed(max_a)[0];
-            blob.dY = blob.randomSpeed(max_a)[1];
+            blob.dX = blob.randomSpeed(max_a_thin)[0];
+            blob.dY = blob.randomSpeed(max_a_thin)[1];
             
             generalBlob_array[i+thickCount-1] = blob; //put in general array
         }
@@ -97,14 +98,14 @@ public class Main {
             //thick
             for (int j = 0; j < (thickBlob_array.length); j++)
             {
-                thickBlob_array[j].dX = thickBlob_array[j].randomSpeed(max_a)[0];
-                thickBlob_array[j].dY = thickBlob_array[j].randomSpeed(max_a)[1];
+                thickBlob_array[j].dX = thickBlob_array[j].randomSpeed(max_a_thick)[0];
+                thickBlob_array[j].dY = thickBlob_array[j].randomSpeed(max_a_thick)[1];
             }
             //thin
             for (int j = 0; j < (thinBlob_array.length); j++)
             {
-                thinBlob_array[j].dX = thinBlob_array[j].randomSpeed(max_a)[0];
-                thinBlob_array[j].dY = thinBlob_array[j].randomSpeed(max_a)[1];
+                thinBlob_array[j].dX = thinBlob_array[j].randomSpeed(max_a_thin)[0];
+                thinBlob_array[j].dY = thinBlob_array[j].randomSpeed(max_a_thin)[1];
             }
             //#endregion
 
