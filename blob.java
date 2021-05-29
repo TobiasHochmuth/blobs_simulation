@@ -69,11 +69,20 @@ public class blob {
 
         return speed; //return
     }
-}
 
-/*
-public double _distance(int _pos1X, int  _pos1Y, int _pos2X, int _pos2Y)
-{
-    return Math.sqrt(((_pos1X-_pos2X)*(_pos1X-_pos2X))+((_pos1Y - _pos2Y)*(_pos1Y-_pos2Y)));
+    public boolean diceroll(double probability)
+    {
+        Random rand = new Random(); //random number generator
+        double challange = rand.nextInt(99) + 1;
+
+        if (challange >= probability)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
 }
-*/
