@@ -15,10 +15,11 @@ standard_settings = {
     'touched_delay': 50,
     'step_delay': 15,
     'enable_chance': True,
-    'p_thick_grab' : 0.1,
-    'p_thick_go' : 0.01,
-    'p_thin_grab' : 0.1,
-    'p_thin_go' : 0.01 
+    'bothWin' : True,
+    'p_thick_grab' : 10.0,
+    'p_thick_go' : 1.0,
+    'p_thin_grab' : 10.0,
+    'p_thin_go' : 1.0 
 }
 
 file = open("settings.json", "w")

@@ -75,13 +75,13 @@ public class blob {
         Random rand = new Random(); //random number generator
         double challange = rand.nextInt(99) + 1;
 
-        if (challange >= probability)
+        if (challange > probability)
         {
-            return true;
+            return false;
         }
         else
         {
-            return false;
+            return true;
         }
 
     }

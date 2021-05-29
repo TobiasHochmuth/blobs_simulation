@@ -33,6 +33,7 @@ public class Main {
         int touched_delay;
         int step_delay;
         boolean enable_chance;
+        boolean bothWin;
         double p_thick_grab;
         double p_thick_go;
         double p_thin_grab;
@@ -69,6 +70,7 @@ public class Main {
 
             //set probability variables
             enable_chance = (boolean) settings_jo.get("enable_chance");
+            bothWin = (boolean) settings_jo.get("bothWin");
             p_thick_grab = (double) settings_jo.get("p_thick_grab");
             p_thick_go = (double) settings_jo.get("p_thick_go");
             p_thin_grab = (double) settings_jo.get("p_thin_grab");
@@ -171,11 +173,134 @@ public class Main {
 
             if(enable_chance)
             {
+            //#region Update positions if probability is enabled
+            //thick
+            for (int j = 0; j < (thickBlob_array.length); j++)
+            {
+                if (thickBlob_array[j].blobStatus != blob.status.TOUCHING) //if blob is not touching
+                    {
+                    thickBlob_array[j].posX = thickBlob_array[j].posX + thickBlob_array[j].dX; //update position horizontal
                 
+                    //#region Thick blob out of bounds detection horizontal
+                    if (thickBlob_array[j].posX < 0)
+                    {
+                        thickBlob_array[j].posX = canvas_res[0] + thickBlob_array[j].posX;
+                    } 
+                    else if (thickBlob_array[j].posX > canvas_res[0])
+                    {
+                        thickBlob_array[j].posX = thickBlob_array[j].posX - canvas_res[0];
+                    }
+                    //#endregion
+
+                    thickBlob_array[j].posY = thickBlob_array[j].posY + thickBlob_array[j].dY; //update position verical
+                    
+                    //#region Thick blob out of bounds detection vertical
+                    if (thickBlob_array[j].posY < 0)
+                    {
+                        thickBlob_array[j].posY = canvas_res[1] + thickBlob_array[j].posY;
+                    } 
+                    else if (thickBlob_array[j].posY > canvas_res[1])
+                    {
+                        thickBlob_array[j].posY = thickBlob_array[j].posY - canvas_res[1];
+                    }
+                    //#endregion
+
+                    if (thickBlob_array[j].blobStatus == blob.status.TOUCHED) //Decrement touched counter
+                    {
+                        thickBlob_array[j].touchedCounter = thickBlob_array[j].touchedCounter - 1;
+                    }
+
+                    if (thickBlob_array[j].touchedCounter == 0) //Set Blob to normal after touched
+                    {
+                    thickBlob_array[j].blobStatus = blob.status.NORMAL;
+                    }
+                } 
+                else //release blobs according to probability
+                {
+                    double lowest_value = 0;
+                    int index = 0;
+                    for(int k = 0; k < thickBlob_array[j].distance_array.length; k++)
+                    {
+                        if(thickBlob_array[j].distance_array[k] < lowest_value)
+                        {
+                            lowest_value = thickBlob_array[j].distance_array[k];
+                            index = k;
+                        }
+                    }
+
+                    if (thickBlob_array[j].diceroll(p_thick_go) && thinBlob_array[index].diceroll(p_thin_go))
+                    {
+                        thickBlob_array[j].blobStatus = blob.status.TOUCHED;
+                        thinBlob_array[index].blobStatus = blob.status.TOUCHED;
+                    }
+                }
+            }
+            //thin
+            for (int j = 0; j < (thinBlob_array.length); j++)
+            {
+                if (thinBlob_array[j].blobStatus != blob.status.TOUCHING)
+                {
+                    thinBlob_array[j].posX = thinBlob_array[j].posX + thinBlob_array[j].dX; //Update position Horizontal
+                    
+                    //#region Thin blob out of bounds detection horizontal
+                    if (thinBlob_array[j].posX < 0)
+                    {
+                        thinBlob_array[j].posX = canvas_res[0] + thinBlob_array[j].posX;
+                    } 
+                    else if (thinBlob_array[j].posX > canvas_res[0])
+                    {
+                        thinBlob_array[j].posX = thinBlob_array[j].posX - canvas_res[0];
+                    }
+                    //#endregion
+                    
+                    thinBlob_array[j].posY = thinBlob_array[j].posY + thinBlob_array[j].dY; //Update position vertical
+
+                    //#region Thin blob out of bounds detection verical
+                    if (thinBlob_array[j].posY < 0)
+                    {
+                        thinBlob_array[j].posY = canvas_res[1] + thinBlob_array[j].posY;
+                    } 
+                    else if (thinBlob_array[j].posY > canvas_res[1])
+                    {
+                        thinBlob_array[j].posY = thinBlob_array[j].posY - canvas_res[1];
+                    }
+                    //#endregion
+
+                    if (thinBlob_array[j].blobStatus == blob.status.TOUCHED) //Decrement touched counter
+                    {
+                        thinBlob_array[j].touchedCounter = thinBlob_array[j].touchedCounter - 1;
+                    }
+
+                    if (thinBlob_array[j].touchedCounter == 0) //Set blob status to normal after touched
+                    {
+                        thinBlob_array[j].blobStatus = blob.status.NORMAL;
+                    }
+                }
+                else //release according to probability
+                {
+                    double lowest_value = 0;
+                    int index = 0;
+                    for(int k = 0; k < thinBlob_array[j].distance_array.length; k++)
+                    {
+                        if(thinBlob_array[j].distance_array[k] < lowest_value)
+                        {
+                            lowest_value = thinBlob_array[j].distance_array[k];
+                            index = k;
+                        }
+                    }
+
+                    if (thinBlob_array[j].diceroll(p_thick_go) && thickBlob_array[index].diceroll(p_thin_go))
+                    {
+                        thinBlob_array[j].blobStatus = blob.status.TOUCHED;
+                        thickBlob_array[index].blobStatus = blob.status.TOUCHED;
+                    }
+                }
+            }
+            //#endregion
             }
             else
             {
-                //#regionUpdate positions if probability is disabled
+            //#region Update positions if probability is disabled
             //thick
             for (int j = 0; j < (thickBlob_array.length); j++)
             {
@@ -284,8 +409,6 @@ public class Main {
             //#endregion
             }
 
-
-
             //#region Calculate collisions
             for (int j = 0; j < thickBlob_array.length; j++) //for every thick blob
             {
@@ -308,6 +431,35 @@ public class Main {
                     (thinBlob_array[k].blobStatus != blob.status.TOUCHED)) //If the two blobs are touching and available
                     {
                         //Set their status to touching
+
+                        if(enable_chance)
+                        {
+                            if (bothWin)
+                            {
+                                if (thickBlob_array[j].diceroll(p_thick_grab) && thinBlob_array[k].diceroll(p_thin_grab))
+                                {
+                                    thickBlob_array[j].blobStatus = blob.status.TOUCHING;
+                                    thinBlob_array[k].blobStatus = blob.status.TOUCHING;
+
+                                    thickBlob_array[j].touchedCounter = touched_delay;
+                                    thinBlob_array[k].touchedCounter = touched_delay;
+                                }
+                            }
+                            else
+                            {
+                                if (thickBlob_array[j].diceroll(p_thick_grab) || thinBlob_array[k].diceroll(p_thin_grab))
+                                {
+                                    thickBlob_array[j].blobStatus = blob.status.TOUCHING;
+                                    thinBlob_array[k].blobStatus = blob.status.TOUCHING;
+
+                                    //Set their touched delay
+                                    thickBlob_array[j].touchedCounter = touched_delay;
+                                    thinBlob_array[k].touchedCounter = touched_delay;
+                                }
+                            }
+                        }
+                        else
+                        {
                         thickBlob_array[j].blobStatus = blob.status.TOUCHING;
                         thinBlob_array[k].blobStatus = blob.status.TOUCHING;
 
@@ -318,6 +470,7 @@ public class Main {
                         //Set their touched delay
                         thickBlob_array[j].touchedCounter = touched_delay;
                         thinBlob_array[k].touchedCounter = touched_delay;
+                        }
                     }
                 }
             }
