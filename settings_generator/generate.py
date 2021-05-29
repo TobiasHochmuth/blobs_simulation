@@ -14,7 +14,7 @@ standard_settings = {
     'touching_delay': 100,
     'touched_delay': 50,
     'step_delay': 15,
-    'enable_chance': 'true',
+    'enable_chance': True,
     'p_thick_grab' : 0.1,
     'p_thick_go' : 0.01,
     'p_thin_grab' : 0.1,

@@ -32,6 +32,11 @@ public class Main {
         int touching_delay;
         int touched_delay;
         int step_delay;
+        boolean enable_chance;
+        double p_thick_grab;
+        double p_thick_go;
+        double p_thin_grab;
+        double p_thin_go;
 
         //#region Read from json
         JSONParser parser = new JSONParser();
@@ -61,6 +66,13 @@ public class Main {
             int radius_thick = (int) (long) settings_jo.get("radius_thick");
             int radius_thin = (int) (long) settings_jo.get("radius_thin");
             radii = new int[] {radius_thick, radius_thin};
+
+            //set probability variables
+            enable_chance = (boolean) settings_jo.get("enable_chance");
+            p_thick_grab = (double) settings_jo.get("p_thick_grab");
+            p_thick_go = (double) settings_jo.get("p_thick_go");
+            p_thin_grab = (double) settings_jo.get("p_thin_grab");
+            p_thin_go = (double) settings_jo.get("p_thin_go");
 
             //set the rest of variables
             thickCount = (int) (long) settings_jo.get("thickCount");
