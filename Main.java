@@ -1,6 +1,13 @@
 import nano.*;  
 import java.awt.Color;
 import java.lang.Math;
+
+//#region Setting reader packages
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+ 
+import java.io.FileReader;
+//#endregion
     
 public class Main {
 
@@ -14,31 +21,73 @@ public class Main {
         System.out.println("Blob simulation started");
 
         //Initialize simuation enviornment
-
+        
         //#regionImport setup from setup.json
-        final int xSize = 720;
-        final int ySize = 720;
-        final int[] canvas_res = {xSize, ySize};
-        final int[] max_a = {3, 3};
-        final int thickCount = 35;
-        final int thinCount = 35;
-        final int thicR = 10;
-        final int thinR = 5;
-        final int[] radii = {thicR, thinR};
-        final int touching_delay = 50;
-        final int touched_delay = 100;
+        int[] canvas_res = new int[2];
+        int[] max_a_thick = new int[2];
+        int[] max_a_thin = new int[2];
+        int[] radii = new int[2];
+        int thickCount;
+        int thinCount;
+        int touching_delay;
+        int touched_delay;
+        int step_delay;
+
+        //#region Read from json
+        JSONParser parser = new JSONParser();
+
+        try {
+            Object obj = parser.parse(new FileReader("settings.json"));
+    
+            // A JSON object. Key value pairs are unordered. JSONObject supports java.util.Map interface.
+            JSONObject settings_jo = (JSONObject) obj;    
+
+            //set canvas res
+            int canvas_res_x = (int) (long) settings_jo.get("canvas_res_x");
+            int canvas_res_y = (int) (long) settings_jo.get("canvas_res_y");
+            canvas_res = new int[] {canvas_res_x, canvas_res_y};
+
+            //set max a thick
+            int max_a_thick_x = (int) (long) settings_jo.get("max_a_thick_x");
+            int max_a_thick_y = (int) (long) settings_jo.get("max_a_thick_y");
+            max_a_thick = new int[] {max_a_thick_x, max_a_thick_y};
+
+            //set max a thin
+            int max_a_thin_x = (int) (long) settings_jo.get("max_a_thin_x");
+            int max_a_thin_y = (int) (long) settings_jo.get("max_a_thin_y");
+            max_a_thin = new int[] {max_a_thin_x, max_a_thin_y};
+
+            //set radii
+            int radius_thick = (int) (long) settings_jo.get("radius_thick");
+            int radius_thin = (int) (long) settings_jo.get("radius_thin");
+            radii = new int[] {radius_thick, radius_thin};
+
+            //set the rest of variables
+            thickCount = (int) (long) settings_jo.get("thickCount");
+            thinCount = (int) (long) settings_jo.get("thinCount");
+            touching_delay = (int) (long) settings_jo.get("touching_delay");
+            touched_delay = (int) (long) settings_jo.get("touched_delay");
+            step_delay = (int) (long) settings_jo.get("step_delay");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("EXITING....");
+            return;
+        }
+
+        //#endregion
 
         //#region Colortable
-        final Color thickColorNormal = Color.RED;
-        final Color thinColorNormal = Color.BLUE;
-        final Color thickColorTouching = Color.YELLOW;
-        final Color thinColorTouching = Color.YELLOW;
-        final Color thickColorTouched = Color.PINK;
-        final Color thinColorTouched = Color.CYAN;
+        Color thickColorNormal = Color.RED;
+        Color thinColorNormal = Color.BLUE;
+        Color thickColorTouching = Color.YELLOW;
+        Color thinColorTouching = Color.YELLOW;
+        Color thickColorTouched = Color.PINK;
+        Color thinColorTouched = Color.CYAN;
         //#endregion
         //#endregion
 
-        Canvas simulation_canvas = new Canvas(xSize, ySize, 75, 0); //Start window
+        Canvas simulation_canvas = new Canvas(canvas_res[0], canvas_res[1], 75, 0); //Start window
         Pen pen = new Pen(simulation_canvas); //Start pen
 
         //#regionInitialize all the blobs
@@ -50,39 +99,39 @@ public class Main {
 
         //#region Generate the blob arrays and polulate them respectivley
         //#region Thick
-        for (int i = 0; i < thickCount; i++)
+        for (int i = 0; i < thickBlob_array.length; i++)
         {
-            blob blob = new blob(i, thinCount, true, radii); //new blob
+            blob blob = new blob(i, thinBlob_array.length, true, radii); //new blob
             blob.masterID = i+1; //assign id
-            blob.radius = thicR; //determine radius
+            blob.radius = radii[0]; //determine radius
             thickBlob_array[i] = blob; //put in thickarray
 
             //assign random starting positions to every blob
             blob.posX = blob.randomPosition(canvas_res)[0];
             blob.posY = blob.randomPosition(canvas_res)[1];
             //assign random starting speeds to every blob
-            blob.dX = blob.randomSpeed(max_a)[0];
-            blob.dY = blob.randomSpeed(max_a)[1];
+            blob.dX = blob.randomSpeed(max_a_thick)[0];
+            blob.dY = blob.randomSpeed(max_a_thick)[1];
 
             generalBlob_array[i] = blob; //put in general array
         }
         //#endregion
         //#region Thin
-        for (int i = 0; i < thinCount; i++)
+        for (int i = 0; i < thinBlob_array.length; i++)
         {
-            blob blob = new blob(i, thinCount, false, radii); //new blob
+            blob blob = new blob(i, thickBlob_array.length, false, radii); //new blob
             blob.masterID = -i-1; //assign id
-            blob.radius = thinR; //determine radius
+            blob.radius = radii[1]; //determine radius
             thinBlob_array[i] = blob; //put in thinarray
 
             //assign random starting positions to every blob
             blob.posX = blob.randomPosition(canvas_res)[0];
             blob.posY = blob.randomPosition(canvas_res)[1];
             //assign random starting speeds to every blob
-            blob.dX = blob.randomSpeed(max_a)[0];
-            blob.dY = blob.randomSpeed(max_a)[1];
+            blob.dX = blob.randomSpeed(max_a_thin)[0];
+            blob.dY = blob.randomSpeed(max_a_thin)[1];
             
-            generalBlob_array[i+thickCount-1] = blob; //put in general array
+            generalBlob_array[i+thickBlob_array.length-1] = blob; //put in general array
         }
         //#endregion
         //#endregion
@@ -97,14 +146,14 @@ public class Main {
             //thick
             for (int j = 0; j < (thickBlob_array.length); j++)
             {
-                thickBlob_array[j].dX = thickBlob_array[j].randomSpeed(max_a)[0];
-                thickBlob_array[j].dY = thickBlob_array[j].randomSpeed(max_a)[1];
+                thickBlob_array[j].dX = thickBlob_array[j].randomSpeed(max_a_thick)[0];
+                thickBlob_array[j].dY = thickBlob_array[j].randomSpeed(max_a_thick)[1];
             }
             //thin
             for (int j = 0; j < (thinBlob_array.length); j++)
             {
-                thinBlob_array[j].dX = thinBlob_array[j].randomSpeed(max_a)[0];
-                thinBlob_array[j].dY = thinBlob_array[j].randomSpeed(max_a)[1];
+                thinBlob_array[j].dX = thinBlob_array[j].randomSpeed(max_a_thin)[0];
+                thinBlob_array[j].dY = thinBlob_array[j].randomSpeed(max_a_thin)[1];
             }
             //#endregion
 
@@ -252,7 +301,7 @@ public class Main {
             }
 
             //Draw simulation
-            for (int j = 0; j < thickCount; j++) //Draw thick blobs
+            for (int j = 0; j < thickBlob_array.length; j++) //Draw thick blobs
             {
                 switch(thickBlob_array[j].blobStatus) {
                     case NORMAL:
@@ -266,7 +315,7 @@ public class Main {
                         break;
                   }
             }   
-            for (int j = 0; j < thinCount; j++) //Draw thin blobs
+            for (int j = 0; j < thinBlob_array.length; j++) //Draw thin blobs
             {
                 switch(thinBlob_array[j].blobStatus) {
                     case NORMAL:
@@ -285,7 +334,7 @@ public class Main {
             simulation_canvas.update();
 
             try {
-                Thread.sleep(15);
+                Thread.sleep(step_delay);
             } catch (Exception InterruptException) {
             }
 
