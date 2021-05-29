@@ -20,13 +20,13 @@ public class Main {
         final int ySize = 720;
         final int[] canvas_res = {xSize, ySize};
         final int[] max_a = {3, 3};
-        final int thickCount = 30;
-        final int thinCount = 30;
+        final int thickCount = 35;
+        final int thinCount = 35;
         final int thicR = 10;
         final int thinR = 5;
         final int[] radii = {thicR, thinR};
-        final int touching_delay = 10;
-        final int touched_delay = 10;
+        final int touching_delay = 50;
+        final int touched_delay = 100;
 
         //#region Colortable
         final Color thickColorNormal = Color.RED;
@@ -152,7 +152,13 @@ public class Main {
                 } 
                 else
                 {
-                    thickBlob_array[j].touchingCounter = thickBlob_array[j].touchingCounter - 1;
+                    if(thickBlob_array[j].touchingCounter != 0)
+                    {
+                        thickBlob_array[j].touchingCounter = thickBlob_array[j].touchingCounter - 1;                    } 
+                    else 
+                    {
+                        thickBlob_array[j].blobStatus = blob.status.TOUCHED;
+                    }
                 }
             }
             //thin
@@ -198,14 +204,21 @@ public class Main {
                 }
                 else
                 {
-                    thinBlob_array[j].touchingCounter = thinBlob_array[j].touchingCounter - 1;
+                    if(thinBlob_array[j].touchingCounter != 0)
+                    {
+                        thinBlob_array[j].touchingCounter = thinBlob_array[j].touchingCounter - 1;
+                    }
+                    else
+                    {
+                        thinBlob_array[j].blobStatus = blob.status.TOUCHED;
+                    }
                 }
             }
 
             //#region Calculate collisions
             for (int j = 0; j < thickBlob_array.length; j++) //for every thick blob
             {
-                for(int k = 0; k < thinBlob_array.length; j++) //find the properties in relation to every thin blob
+                for(int k = 0; k < thinBlob_array.length; k++) //find the properties in relation to every thin blob
                 {
                     double d = distance(
                     thickBlob_array[j].posX,
