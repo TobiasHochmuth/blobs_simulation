@@ -16,16 +16,12 @@ public class Main {
         //Initialize simuation enviornment
 
         //#regionImport setup from setup.json
-        final int xSize = 720;
-        final int ySize = 720;
-        final int[] canvas_res = {xSize, ySize};
+        final int[] canvas_res = {720, 720};
         final int[] max_a_thick = {3, 3};
         final int[] max_a_thin = {3, 3};
         final int thickCount = 35;
         final int thinCount = 35;
-        final int thicR = 10;
-        final int thinR = 5;
-        final int[] radii = {thicR, thinR};
+        final int[] radii = {10, 5};
         final int touching_delay = 50;
         final int touched_delay = 100;
 
@@ -39,7 +35,7 @@ public class Main {
         //#endregion
         //#endregion
 
-        Canvas simulation_canvas = new Canvas(xSize, ySize, 75, 0); //Start window
+        Canvas simulation_canvas = new Canvas(canvas_res[0], canvas_res[1], 75, 0); //Start window
         Pen pen = new Pen(simulation_canvas); //Start pen
 
         //#regionInitialize all the blobs
@@ -55,7 +51,7 @@ public class Main {
         {
             blob blob = new blob(i, thinCount, true, radii); //new blob
             blob.masterID = i+1; //assign id
-            blob.radius = thicR; //determine radius
+            blob.radius = radii[0]; //determine radius
             thickBlob_array[i] = blob; //put in thickarray
 
             //assign random starting positions to every blob
@@ -73,7 +69,7 @@ public class Main {
         {
             blob blob = new blob(i, thinCount, false, radii); //new blob
             blob.masterID = -i-1; //assign id
-            blob.radius = thinR; //determine radius
+            blob.radius = radii[1]; //determine radius
             thinBlob_array[i] = blob; //put in thinarray
 
             //assign random starting positions to every blob
