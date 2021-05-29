@@ -1,0 +1,3 @@
+This program simulates two types of blobs interacting with each other.
+The program is outlined in 2.6 in info/instrustions.pdf
+One should compile the program as a simple jar file.
