@@ -1,6 +1,5 @@
-    import nano.*;  
-    import java.awt.Color;
-    import java.lang.Math;
+import nano.*;  
+import java.awt.Color;
     
 public class Main {
 
@@ -25,6 +24,8 @@ public class Main {
         final int thicR = 10;
         final int thinR = 5;
         final int[] radii = {thicR, thinR};
+        final int touching_delay = 10;
+        final int touched_delay = 10;
 
 
         //Start window
@@ -102,55 +103,92 @@ public class Main {
             //thick
             for (int j = 0; j < (thickBlob_array.length); j++)
             {
-                thickBlob_array[j].posX = thickBlob_array[j].posX + thickBlob_array[j].dX;
+                if (thickBlob_array[j].blobStatus != blob.status.TOUCHING) //if not touching or touched, do normal
+                {
+
+                    thickBlob_array[j].posX = thickBlob_array[j].posX + thickBlob_array[j].dX;
                 
-                //chech for out of bounds
-                if (thickBlob_array[j].posX < 0)
-                {
-                    thickBlob_array[j].posX = canvas_res[0] + thickBlob_array[j].posX;
-                } 
-                else if (thickBlob_array[j].posX > canvas_res[0])
-                {
-                    thickBlob_array[j].posX = thickBlob_array[j].posX - canvas_res[0];
+                    //chech for out of bounds
+                    if (thickBlob_array[j].posX < 0)
+                    {
+                        thickBlob_array[j].posX = canvas_res[0] + thickBlob_array[j].posX;
+                    } 
+                    else if (thickBlob_array[j].posX > canvas_res[0])
+                    {
+                        thickBlob_array[j].posX = thickBlob_array[j].posX - canvas_res[0];
+                    }
+                    
+                    thickBlob_array[j].posY = thickBlob_array[j].posY + thickBlob_array[j].dY;
+                    
+                    //chech for out of bounds
+                    if (thickBlob_array[j].posY < 0)
+                    {
+                        thickBlob_array[j].posY = canvas_res[1] + thickBlob_array[j].posY;
+                    } 
+                    else if (thickBlob_array[j].posY > canvas_res[1])
+                    {
+                        thickBlob_array[j].posY = thickBlob_array[j].posY - canvas_res[1];
+                    }
+
+                    if (thickBlob_array[j].blobStatus == blob.status.TOUCHED)
+                    {
+                        thickBlob_array[j].touchedCounter = thickBlob_array[j].touchedCounter - 1;
+                    }
+
+                    if (thickBlob_array[j].touchedCounter == 0)
+                    {
+                        thickBlob_array[j].blobStatus = blob.status.NORMAL;
+                    }
+
                 }
-                
-                thickBlob_array[j].posY = thickBlob_array[j].posY + thickBlob_array[j].dY;
-                
-                //chech for out of bounds
-                if (thickBlob_array[j].posY < 0)
+                else
                 {
-                    thickBlob_array[j].posY = canvas_res[1] + thickBlob_array[j].posY;
-                } 
-                else if (thickBlob_array[j].posY > canvas_res[1])
-                {
-                    thickBlob_array[j].posY = thickBlob_array[j].posY - canvas_res[1];
+                    thickBlob_array[j].touchingCounter = thickBlob_array[j].touchingCounter - 1;
                 }
             }
             //thin
             for (int j = 0; j < (thinBlob_array.length); j++)
             {
-                thinBlob_array[j].posX = thinBlob_array[j].posX + thinBlob_array[j].dX;
-                
-                //chech for out of bounds
-                if (thinBlob_array[j].posX < 0)
+                if (thinBlob_array[j].blobStatus != blob.status.TOUCHING)
                 {
-                    thinBlob_array[j].posX = canvas_res[0] + thinBlob_array[j].posX;
-                } 
-                else if (thinBlob_array[j].posX > canvas_res[0])
-                {
-                    thinBlob_array[j].posX = thinBlob_array[j].posX - canvas_res[0];
-                }
-                
-                thinBlob_array[j].posY = thinBlob_array[j].posY + thinBlob_array[j].dY;
+                    thinBlob_array[j].posX = thinBlob_array[j].posX + thinBlob_array[j].dX;
+                    
+                    //chech for out of bounds
+                    if (thinBlob_array[j].posX < 0)
+                    {
+                        thinBlob_array[j].posX = canvas_res[0] + thinBlob_array[j].posX;
+                    } 
+                    else if (thinBlob_array[j].posX > canvas_res[0])
+                    {
+                        thinBlob_array[j].posX = thinBlob_array[j].posX - canvas_res[0];
+                    }
+                    
+                    thinBlob_array[j].posY = thinBlob_array[j].posY + thinBlob_array[j].dY;
 
-                //chech for out of bounds
-                if (thinBlob_array[j].posY < 0)
+                    //chech for out of bounds
+                    if (thinBlob_array[j].posY < 0)
+                    {
+                        thinBlob_array[j].posY = canvas_res[1] + thinBlob_array[j].posY;
+                    } 
+                    else if (thinBlob_array[j].posY > canvas_res[1])
+                    {
+                        thinBlob_array[j].posY = thinBlob_array[j].posY - canvas_res[1];
+                    }
+
+                    if (thinBlob_array[j].blobStatus == blob.status.TOUCHED)
+                    {
+                        thinBlob_array[j].touchedCounter = thinBlob_array[j].touchedCounter - 1;
+                    }
+
+                    if (thinBlob_array[j].touchedCounter == 0)
+                    {
+                        thinBlob_array[j].blobStatus = blob.status.NORMAL;
+                    }
+
+                }
+                else
                 {
-                    thinBlob_array[j].posY = canvas_res[1] + thinBlob_array[j].posY;
-                } 
-                else if (thinBlob_array[j].posY > canvas_res[1])
-                {
-                    thinBlob_array[j].posY = thinBlob_array[j].posY - canvas_res[1];
+                    thinBlob_array[j].touchingCounter = thinBlob_array[j].touchingCounter - 1;
                 }
             }
 
@@ -165,19 +203,52 @@ public class Main {
                     thickBlob_array[j].distance_array[k] = d;
                     thinBlob_array[k].distance_array[j] = d;
 
-                }
-            }
+                    if (((int) d <= (radii[0]+radii[1])) &&
+                    (thickBlob_array[j].blobStatus != blob.status.TOUCHING) &&
+                    (thinBlob_array[k].blobStatus != blob.status.TOUCHING) &&
+                    (thickBlob_array[j].blobStatus != blob.status.TOUCHED) &&
+                    (thinBlob_array[k].blobStatus != blob.status.TOUCHED)
+                    ) //if touching
+                    {
+                        thickBlob_array[j].blobStatus = blob.status.TOUCHING;
+                        thinBlob_array[k].blobStatus = blob.status.TOUCHING;
+                        thickBlob_array[j].touchingCounter = touching_delay;
+                        thinBlob_array[k].touchingCounter = touching_delay;
+                        thickBlob_array[j].touchedCounter = touched_delay;
+                        thinBlob_array[k].touchedCounter = touched_delay;
+                    }
 
-            //If Touching
+                }
+            }            
 
             //Draw simulation
             for (int j = 0; j < thickCount; j++)
             {
-                pen.drawCircle(thickBlob_array[j].posX, thickBlob_array[j].posY, thickBlob_array[j].radius, Color.RED, true);
-            }
+                switch(thickBlob_array[j].blobStatus) {
+                    case NORMAL:
+                        pen.drawCircle(thickBlob_array[j].posX, thickBlob_array[j].posY, thickBlob_array[j].radius, Color.RED, true);
+                        break;   
+                    case TOUCHING:
+                        pen.drawCircle(thickBlob_array[j].posX, thickBlob_array[j].posY, thickBlob_array[j].radius, Color.YELLOW, true);
+                        break;
+                    case TOUCHED:
+                        pen.drawCircle(thickBlob_array[j].posX, thickBlob_array[j].posY, thickBlob_array[j].radius, Color.PINK, true);
+                        break;
+                  }
+            }   
             for (int j = 0; j < thinCount; j++)
             {
-                pen.drawCircle(thinBlob_array[j].posX, thinBlob_array[j].posY, thinBlob_array[j].radius, Color.BLUE, true);
+                switch(thickBlob_array[j].blobStatus) {
+                    case NORMAL:
+                        pen.drawCircle(thinBlob_array[j].posX, thinBlob_array[j].posY, thinBlob_array[j].radius, Color.BLUE, true);
+                        break;   
+                    case TOUCHING:
+                        pen.drawCircle(thinBlob_array[j].posX, thinBlob_array[j].posY, thinBlob_array[j].radius, Color.YELLOW, true);
+                        break;
+                    case TOUCHED:
+                        pen.drawCircle(thinBlob_array[j].posX, thinBlob_array[j].posY, thinBlob_array[j].radius, Color.CYAN, true);
+                    break;
+                }
             }
 
             //Update simulation canvas after every loop
