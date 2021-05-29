@@ -14,7 +14,7 @@ public class Main {
 
         //Initialize simuation enviornment
 
-        //Import setup from setup.json
+        //#regionImport setup from setup.json
         final int xSize = 720;
         final int ySize = 720;
         final int[] canvas_res = {xSize, ySize};
@@ -24,24 +24,20 @@ public class Main {
         final int thicR = 10;
         final int thinR = 5;
         final int[] radii = {thicR, thinR};
-        final int touching_delay = 10;
-        final int touched_delay = 10;
+        //#endregion
 
+        Canvas simulation_canvas = new Canvas(xSize, ySize, 75, 0); //Start window
+        Pen pen = new Pen(simulation_canvas); //Start pen
 
-        //Start window
-        Canvas simulation_canvas = new Canvas(xSize, ySize, 75, 0);
-        //Start pen
-        Pen pen = new Pen(simulation_canvas);
-
-
-        //Initialize all the blobs
+        //#regionInitialize all the blobs
         //2 different arrays for diffent types of blobs; 1 large major array.
         blob[] thickBlob_array = new blob[thickCount];
         blob[] thinBlob_array = new blob[thinCount];
         blob[] generalBlob_array = new blob[(thickCount+thinCount)];
+        //#endregion
 
-        //generate the blob arrays and polulate them respectivley
-        //thick
+        //#region Generate the blob arrays and polulate them respectivley
+        //#region Thick
         for (int i = 0; i < thickCount; i++)
         {
             blob blob = new blob(i, thinCount, true, radii); //new blob
@@ -58,7 +54,8 @@ public class Main {
 
             generalBlob_array[i] = blob; //put in general array
         }
-        //thin
+        //#endregion
+        //#region Thin
         for (int i = 0; i < thinCount; i++)
         {
             blob blob = new blob(i, thinCount, false, radii); //new blob
@@ -75,16 +72,16 @@ public class Main {
             
             generalBlob_array[i+thickCount-1] = blob; //put in general array
         }
+        //#endregion
+        //#endregion
 
-
-        
-        //Main simulation loop
+        //#region Main simulation loop
         for (int i = 0; true; i++)
         {
             //Clear previous frame
             simulation_canvas.clear();
 
-            //Generate new speeds
+            //#region Generate new speeds
             //thick
             for (int j = 0; j < (thickBlob_array.length); j++)
             {
@@ -97,129 +94,88 @@ public class Main {
                 thinBlob_array[j].dX = thinBlob_array[j].randomSpeed(max_a)[0];
                 thinBlob_array[j].dY = thinBlob_array[j].randomSpeed(max_a)[1];
             }
-
+            //#endregion
 
             //Update positions
             //thick
             for (int j = 0; j < (thickBlob_array.length); j++)
             {
-                if (thickBlob_array[j].blobStatus != blob.status.TOUCHING) //if not touching or touched, do normal
+                thickBlob_array[j].posX = thickBlob_array[j].posX + thickBlob_array[j].dX; //update position horizontal
+            
+                //#region Thick blob out of bounds detection horizontal
+                if (thickBlob_array[j].posX < 0)
                 {
+                    thickBlob_array[j].posX = canvas_res[0] + thickBlob_array[j].posX;
+                } 
+                else if (thickBlob_array[j].posX > canvas_res[0])
+                {
+                    thickBlob_array[j].posX = thickBlob_array[j].posX - canvas_res[0];
+                }
+                //#endregion
 
-                    thickBlob_array[j].posX = thickBlob_array[j].posX + thickBlob_array[j].dX;
+                thickBlob_array[j].posY = thickBlob_array[j].posY + thickBlob_array[j].dY; //update position verical
                 
-                    //chech for out of bounds
-                    if (thickBlob_array[j].posX < 0)
-                    {
-                        thickBlob_array[j].posX = canvas_res[0] + thickBlob_array[j].posX;
-                    } 
-                    else if (thickBlob_array[j].posX > canvas_res[0])
-                    {
-                        thickBlob_array[j].posX = thickBlob_array[j].posX - canvas_res[0];
-                    }
-                    
-                    thickBlob_array[j].posY = thickBlob_array[j].posY + thickBlob_array[j].dY;
-                    
-                    //chech for out of bounds
-                    if (thickBlob_array[j].posY < 0)
-                    {
-                        thickBlob_array[j].posY = canvas_res[1] + thickBlob_array[j].posY;
-                    } 
-                    else if (thickBlob_array[j].posY > canvas_res[1])
-                    {
-                        thickBlob_array[j].posY = thickBlob_array[j].posY - canvas_res[1];
-                    }
-
-                    if (thickBlob_array[j].blobStatus == blob.status.TOUCHED)
-                    {
-                        thickBlob_array[j].touchedCounter = thickBlob_array[j].touchedCounter - 1;
-                    }
-
-                    if (thickBlob_array[j].touchedCounter == 0)
-                    {
-                        thickBlob_array[j].blobStatus = blob.status.NORMAL;
-                    }
-
-                }
-                else
+                //#region Thick blob out of bounds detection vertical
+                if (thickBlob_array[j].posY < 0)
                 {
-                    thickBlob_array[j].touchingCounter = thickBlob_array[j].touchingCounter - 1;
+                    thickBlob_array[j].posY = canvas_res[1] + thickBlob_array[j].posY;
+                } 
+                else if (thickBlob_array[j].posY > canvas_res[1])
+                {
+                    thickBlob_array[j].posY = thickBlob_array[j].posY - canvas_res[1];
                 }
+                //#endregion
+
+                if (thickBlob_array[j].blobStatus == blob.status.TOUCHED)
+                {
+                    thickBlob_array[j].touchedCounter = thickBlob_array[j].touchedCounter - 1;
+                }
+
+                if (thickBlob_array[j].touchedCounter == 0)
+                {
+                    thickBlob_array[j].blobStatus = blob.status.NORMAL;
+                }
+
             }
             //thin
             for (int j = 0; j < (thinBlob_array.length); j++)
             {
-                if (thinBlob_array[j].blobStatus != blob.status.TOUCHING)
+                thinBlob_array[j].posX = thinBlob_array[j].posX + thinBlob_array[j].dX;
+                
+                //#region Thin blob out of bounds detection horizontal
+                if (thinBlob_array[j].posX < 0)
                 {
-                    thinBlob_array[j].posX = thinBlob_array[j].posX + thinBlob_array[j].dX;
-                    
-                    //chech for out of bounds
-                    if (thinBlob_array[j].posX < 0)
-                    {
-                        thinBlob_array[j].posX = canvas_res[0] + thinBlob_array[j].posX;
-                    } 
-                    else if (thinBlob_array[j].posX > canvas_res[0])
-                    {
-                        thinBlob_array[j].posX = thinBlob_array[j].posX - canvas_res[0];
-                    }
-                    
-                    thinBlob_array[j].posY = thinBlob_array[j].posY + thinBlob_array[j].dY;
-
-                    //chech for out of bounds
-                    if (thinBlob_array[j].posY < 0)
-                    {
-                        thinBlob_array[j].posY = canvas_res[1] + thinBlob_array[j].posY;
-                    } 
-                    else if (thinBlob_array[j].posY > canvas_res[1])
-                    {
-                        thinBlob_array[j].posY = thinBlob_array[j].posY - canvas_res[1];
-                    }
-
-                    if (thinBlob_array[j].blobStatus == blob.status.TOUCHED)
-                    {
-                        thinBlob_array[j].touchedCounter = thinBlob_array[j].touchedCounter - 1;
-                    }
-
-                    if (thinBlob_array[j].touchedCounter == 0)
-                    {
-                        thinBlob_array[j].blobStatus = blob.status.NORMAL;
-                    }
-
-                }
-                else
+                    thinBlob_array[j].posX = canvas_res[0] + thinBlob_array[j].posX;
+                } 
+                else if (thinBlob_array[j].posX > canvas_res[0])
                 {
-                    thinBlob_array[j].touchingCounter = thinBlob_array[j].touchingCounter - 1;
+                    thinBlob_array[j].posX = thinBlob_array[j].posX - canvas_res[0];
                 }
-            }
+                //#endregion
+                
+                thinBlob_array[j].posY = thinBlob_array[j].posY + thinBlob_array[j].dY;
 
-            //Find distaces between different types of blobs
-            for (int j = 0; j < thickBlob_array.length; j++)
-            {
-                for (int k = 0; k < thinBlob_array.length; k++)
+                //#region Thin blob out of bounds detection verical
+                if (thinBlob_array[j].posY < 0)
                 {
-                    //get distance
-                    double d = distance(thickBlob_array[j].posX, thickBlob_array[j].posY, thinBlob_array[k].posX, thinBlob_array[k].posY);
-                    
-                    thickBlob_array[j].distance_array[k] = d;
-                    thinBlob_array[k].distance_array[j] = d;
-
-                    if (((int) d <= (radii[0]+radii[1])) &&
-                    (thickBlob_array[j].blobStatus != blob.status.TOUCHING) &&
-                    (thinBlob_array[k].blobStatus != blob.status.TOUCHING) &&
-                    (thickBlob_array[j].blobStatus != blob.status.TOUCHED) &&
-                    (thinBlob_array[k].blobStatus != blob.status.TOUCHED)
-                    ) //if touching
-                    {
-                        thickBlob_array[j].blobStatus = blob.status.TOUCHING;
-                        thinBlob_array[k].blobStatus = blob.status.TOUCHING;
-                        thickBlob_array[j].touchingCounter = touching_delay;
-                        thinBlob_array[k].touchingCounter = touching_delay;
-                        thickBlob_array[j].touchedCounter = touched_delay;
-                        thinBlob_array[k].touchedCounter = touched_delay;
-                    }
-
+                    thinBlob_array[j].posY = canvas_res[1] + thinBlob_array[j].posY;
+                } 
+                else if (thinBlob_array[j].posY > canvas_res[1])
+                {
+                    thinBlob_array[j].posY = thinBlob_array[j].posY - canvas_res[1];
                 }
-            }            
+                //#endregion
+
+                if (thinBlob_array[j].blobStatus == blob.status.TOUCHED)
+                {
+                    thinBlob_array[j].touchedCounter = thinBlob_array[j].touchedCounter - 1;
+                }
+
+                if (thinBlob_array[j].touchedCounter == 0)
+                {
+                    thinBlob_array[j].blobStatus = blob.status.NORMAL;
+                }
+            }                        
 
             //Draw simulation
             for (int j = 0; j < thickCount; j++)
@@ -264,5 +220,6 @@ public class Main {
 
         }
     }
+    //#endregion
 }
   

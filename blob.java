@@ -39,6 +39,7 @@ public class blob {
 
     int touchingCounter = 0;
     int touchedCounter = 0;
+    
 
     double[] distance_array;
 
