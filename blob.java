@@ -21,14 +21,18 @@ public class blob {
     //position
     int posX;
     int posY;
+
     //velocity
     int dX;
     int dY;
+
     //blob dimension and type
     int radius;
     boolean type; //true = thick; false = skinny;
+
     //blob masterID
     int masterID;
+
     //Status
     status blobStatus;
     public enum status{
@@ -40,7 +44,6 @@ public class blob {
     int touchingCounter = 0;
     int touchedCounter = 0;
     
-
     double[] distance_array;
 
     //get ranom positions
