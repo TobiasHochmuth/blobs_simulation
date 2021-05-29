@@ -11,5 +11,10 @@
     "radius_thin": 5,
     "touching_delay": 100,
     "touched_delay": 50,
-    "step_delay": 15
+    "step_delay": 15,
+    "enable_chance": "true",
+    "p_thick_grab": 0.1,
+    "p_thick_go": 0.01,
+    "p_thin_grab": 0.1,
+    "p_thin_go": 0.01
 }
