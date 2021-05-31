@@ -1,3 +1,4 @@
+package sim;
 import java.util.Random;
 
 public class blob {
@@ -16,7 +17,7 @@ public class blob {
 
         distance_array = new double[_partnerCount];
 
-    } 
+    }
 
     //position
     int posX;

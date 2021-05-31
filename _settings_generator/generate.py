@@ -1,6 +1,6 @@
 import json
 
-standard_settings = {
+standard_settings ={
     'canvas_res_x' : 720,
     'canvas_res_y' : 720,
     'canvas_pos_x' : 75,

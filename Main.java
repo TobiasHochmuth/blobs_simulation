@@ -2,6 +2,9 @@
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import java.io.FileReader;
+
+import sim.*;
+import pkg.*;
 //#endregion
     
 public class Main { //Handle settings input, generate threads, 
@@ -23,11 +26,7 @@ public class Main { //Handle settings input, generate threads,
 
             simulation_obj.canvas.update();
 
-            try {
-                Thread.sleep(simulation_obj.step_delay);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            simulation_obj.sleep();
 
             logging.iteration_log(1, i);
         }

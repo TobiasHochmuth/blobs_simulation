@@ -1,4 +1,4 @@
-
+package sim;
 import nano.*;
 import java.lang.Math;
 import java.awt.Color;
@@ -224,6 +224,14 @@ public class simulation {
         }
     }
 
+    public void sleep()
+    {
+        try {
+            Thread.sleep(step_delay);            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     //#endregion
 
     //#region Private
